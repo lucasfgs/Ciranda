@@ -1,0 +1,14 @@
+{
+  "name": "Ciranda",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Lucas Ferreira <blooodcf@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "sequelize-cli": "^5.5.1"
+  },
+  "dependencies": {
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.12"
+  }
+}
