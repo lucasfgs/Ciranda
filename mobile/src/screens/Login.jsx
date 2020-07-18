@@ -9,11 +9,13 @@ import {
 } from "react-native";
 
 import spinning from "../../assets/spinning.gif";
+import wave from "../../assets/wave.png";
 
 export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
+        <Image source={wave} style={styles.background} />
         <Image source={spinning} style={styles.animation} />
         <Text style={styles.title}>Ciranda</Text>
       </View>
@@ -54,10 +56,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   topContainer: {
-    backgroundColor: "#383961",
+    // backgroundColor: "#383961",
     alignSelf: "stretch",
     alignItems: "center",
     paddingTop: 40,
+  },
+  background: {
+    width: "100%",
+    height: 280,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: -2,
   },
   title: {
     color: "#C2617E",
@@ -68,18 +78,18 @@ const styles = StyleSheet.create({
   },
   animation: {
     width: 300,
-    height: 150,
+    height: 100,
     zIndex: -1,
   },
   formTitle: {
     color: "#292f36",
     fontSize: 25,
-    marginVertical: 25,
+    marginVertical: 40,
     textAlign: "center",
   },
   formContainer: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
   },
   input: {
