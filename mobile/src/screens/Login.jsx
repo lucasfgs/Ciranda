@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,18 +6,54 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
+  Keyboard,
 } from "react-native";
+import Spinner from "react-native-loading-spinner-overlay";
 
 import spinning from "../../assets/spinning.gif";
 import wave from "../../assets/wave.png";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  function handlePress() {
+    setLoading(true);
+    console.log("A");
+  }
+
   return (
     <View style={styles.container}>
+      <Spinner visible={loading} />
       <View style={styles.topContainer}>
-        <Image source={wave} style={styles.background} />
-        <Image source={spinning} style={styles.animation} />
-        <Text style={styles.title}>Ciranda</Text>
+        {!isKeyboardVisible && (
+          <>
+            <Image source={wave} style={styles.background} />
+            <Image source={spinning} style={styles.animation} />
+            <Text style={styles.title}>Ciranda</Text>
+          </>
+        )}
       </View>
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>Acesse a sua conta</Text>
@@ -31,7 +67,7 @@ export default function Login() {
           style={styles.input}
           placeholderTextColor="#292f36"
         ></TextInput>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handlePress}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
         <View style={styles.createAccount}>
@@ -40,9 +76,6 @@ export default function Login() {
             <Text style={styles.createAccountButtonText}>Crie agora</Text>
           </TouchableOpacity>
         </View>
-        {/* <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Cadastrar</Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -56,7 +89,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   topContainer: {
-    // backgroundColor: "#383961",
     alignSelf: "stretch",
     alignItems: "center",
     paddingTop: 40,
@@ -130,5 +162,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#C2617E",
     fontWeight: "bold",
+  },
+  loading: {
+    position: "absolute",
+    top: "50%",
   },
 });
