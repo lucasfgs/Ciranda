@@ -4,7 +4,13 @@
   "main": "index.js",
   "author": "Lucas Ferreira <blooodcf@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js --ignore __tests__",
+    "test": "jest"
+  },
   "devDependencies": {
+    "jest": "^26.1.0",
     "sequelize-cli": "^5.5.1"
   },
   "dependencies": {
