@@ -1,5 +1,4 @@
 /* jshint indent: 2 */
-module.exports = Address;
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "alunos",
