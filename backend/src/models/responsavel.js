@@ -1,37 +1,34 @@
-/* jshint indent: 2 */
+const { Model, DataTypes } = require("sequelize");
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('responsavel', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
-    nome: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    senha: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    saldo: {
-      type: DataTypes.DECIMAL,
-      allowNull: false
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false
-    }
-  }, {
-    tableName: 'responsavel'
-  });
-};
+class Responsavel extends Model {
+  static init(connection) {
+    super.init(
+      {
+        nome: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+        email: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+        senha: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+        saldo: {
+          type: DataTypes.DECIMAL,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize: connection,
+      }
+    );
+  }
+  static associate(model) {
+    this.belongsTo(model.Alunos);
+  }
+}
+
+module.exports = Responsavel;

@@ -1,40 +1,36 @@
-/* jshint indent: 2 */
-module.exports = function (sequelize, DataTypes) {
-  return sequelize.define(
-    "alunos",
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-      },
-      nome: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      qr_code: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      id_responsavel: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "responsavel",
-          key: "id",
+const { Model, DataTypes } = require("sequelize");
+class Alunos extends Model {
+  static init(connection) {
+    super.init(
+      {
+        nome: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+        qr_code: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+        id_responsavel: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+            model: "responsavel",
+            key: "id",
+          },
         },
       },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-    },
-    {
-      tableName: "alunos",
-    }
-  );
-};
+      {
+        sequelize: connection,
+      }
+    );
+  }
+  static associate(model) {
+    this.hasOne(model.Responsavel, {
+      foreignKey: "id_responsavel",
+      as: "responsavel",
+    });
+  }
+}
+
+module.exports = Alunos;
