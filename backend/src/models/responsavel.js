@@ -1,34 +1,26 @@
-const { Model, DataTypes } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  const Responsavel = sequelize.define("Responsavel", {
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    senha: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    saldo: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+  });
 
-class Responsavel extends Model {
-  static init(connection) {
-    super.init(
-      {
-        nome: {
-          type: DataTypes.STRING(255),
-          allowNull: false,
-        },
-        email: {
-          type: DataTypes.STRING(255),
-          allowNull: false,
-        },
-        senha: {
-          type: DataTypes.STRING(255),
-          allowNull: false,
-        },
-        saldo: {
-          type: DataTypes.DECIMAL,
-          allowNull: false,
-        },
-      },
-      {
-        sequelize: connection,
-      }
-    );
-  }
-  static associate(model) {
-    this.belongsTo(model.Alunos);
-  }
-}
+  Responsavel.associate = (models) => {
+    Responsavel.hasMany(models.Alunos);
+  };
 
-module.exports = Responsavel;
+  return Responsavel;
+};

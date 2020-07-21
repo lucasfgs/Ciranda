@@ -1,3 +1,3 @@
 describe("Authentication", () => {
-  it("should");
+  it("should verify if user exists and match with password", async () => {});
 });
