@@ -7,9 +7,10 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --ignore __tests__",
-    "pretest": "env NODE_ENV=test sequelize db:migrate",
-    "test": "env NODE_ENV=test jest",
-    "posttest": "env NODE_ENV=test sequelize db:migrate:undo:all"
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
+    "pretest": "env NODE_ENV=test npm run migrate:reset",
+    "test": "env NODE_ENV=test jest"
   },
   "devDependencies": {
     "jest": "^26.1.0",
