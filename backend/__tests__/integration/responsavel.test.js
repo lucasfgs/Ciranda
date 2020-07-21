@@ -15,7 +15,6 @@ describe("Responsavel - /responsaveis", () => {
   });
 
   it("should create a reponsible", async () => {
-    console.log(responsavel);
     const response = await request(server)
       .post("/responsaveis")
       .send({
@@ -24,7 +23,7 @@ describe("Responsavel - /responsaveis", () => {
         senha: "123",
         saldo: 0,
       })
-      .expect(200)
+      .expect(201)
       .expect("Content-Type", /json/);
   });
 
@@ -41,12 +40,8 @@ describe("Responsavel - /responsaveis", () => {
       .expect(200)
       .expect("Content-Type", /json/)
       .then((response) => {
-        assert(response.body.email, responsavel.email);
+        expect(response.body.email).toBe(responsavel.email);
       });
-  });
-
-  it("should delete a specific responsible", async () => {
-    await request(server).delete(`/responsaveis/${responsavel.id}`).expect(200);
   });
 
   it("should update a responsible data", async () => {
@@ -55,11 +50,18 @@ describe("Responsavel - /responsaveis", () => {
       .send({
         id: responsavel.id,
         nome: "test2",
+        email: responsavel.email,
+        senha: responsavel.senha,
+        saldo: responsavel.saldo,
       })
       .expect(200)
       .expect("Content-Type", /json/)
       .then((response) => {
-        assert(response.body.nome, "test2");
+        expect(response.body[0]).toBe(1);
       });
+  });
+
+  it("should delete a specific responsible", async () => {
+    await request(server).delete(`/responsaveis/${responsavel.id}`).expect(200);
   });
 });
