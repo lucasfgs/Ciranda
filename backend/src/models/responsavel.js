@@ -18,9 +18,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  Responsavel.associate = (models) => {
-    Responsavel.hasMany(models.Alunos);
-  };
-
   return Responsavel;
 };

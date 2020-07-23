@@ -9,14 +9,13 @@ describe("Alunos - /alunos", () => {
   beforeAll(async () => {
     responsavel = await Responsavel.create({
       nome: "test",
-      email: "test@test.com",
+      email: "test123@test.com",
       senha: "123",
       saldo: 0,
     });
 
     aluno = await Alunos.create({
       nome: "aluno",
-      qr_code: "x",
       id_responsavel: responsavel.id,
     });
   });
@@ -26,7 +25,6 @@ describe("Alunos - /alunos", () => {
       .post("/alunos")
       .send({
         nome: "Lucas",
-        qr_code: "x",
         id_responsavel: responsavel.id,
       })
       .expect(201)
@@ -56,7 +54,6 @@ describe("Alunos - /alunos", () => {
       .send({
         id: aluno.id,
         nome: "test",
-        qr_code: aluno.qr_code,
         id_responsavel: aluno.id_responsavel,
       })
       .expect(200)

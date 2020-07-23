@@ -4,10 +4,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    qr_code: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
     id_responsavel: {
       type: DataTypes.INTEGER,
       allowNull: false,
