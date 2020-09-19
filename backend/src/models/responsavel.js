@@ -1,22 +1,21 @@
-module.exports = (sequelize, DataTypes) => {
-  const Responsavel = sequelize.define("Responsavel", {
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    senha: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    saldo: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-  });
+const { Model, DataTypes } = require("sequelize");
 
-  return Responsavel;
-};
+class Responsavel extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        nome: DataTypes.STRING,
+        email: DataTypes.STRING,
+        cpf: DataTypes.STRING,
+        telefone: DataTypes.STRING,
+        senha: DataTypes.STRING,
+        saldo: DataTypes.DECIMAL,
+      },
+      {
+        sequelize,
+      }
+    );
+  }
+}
+
+module.exports = Responsavel;

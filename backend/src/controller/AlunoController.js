@@ -1,15 +1,19 @@
-const { Alunos } = require("../models");
+const Alunos = require("../models/Alunos");
 
 class AlunoController {
   async store(req, res) {
     const { id_responsavel, nome } = req.body;
 
-    const aluno = await Alunos.create({
-      nome,
-      id_responsavel,
-    });
+    try {
+      const aluno = await Alunos.create({
+        nome,
+        id_responsavel,
+      });
 
-    res.status(201).json(aluno);
+      res.status(201).json(aluno);
+    } catch (error) {
+      res.status(400).json("Erro ao realizar cadastro");
+    }
   }
   async index(req, res) {
     const alunos = await Alunos.findAll();

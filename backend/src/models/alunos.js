@@ -1,23 +1,24 @@
-module.exports = (sequelize, DataTypes) => {
-  const Alunos = sequelize.define("Alunos", {
-    nome: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    id_responsavel: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "responsavel",
-        key: "id",
+const { Model, DataTypes } = require("sequelize");
+
+class Alunos extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        nome: DataTypes.STRING,
+        id_responsavel: DataTypes.INTEGER,
       },
-    },
-  });
-  Alunos.associate = (models) => {
+      {
+        sequelize,
+      }
+    );
+  }
+
+  static associate(models) {
     Alunos.belongsTo(models.Responsavel, {
       foreignKey: "id_responsavel",
       as: "responsavel",
     });
-  };
-  return Alunos;
-};
+  }
+}
+
+module.exports = Alunos;
