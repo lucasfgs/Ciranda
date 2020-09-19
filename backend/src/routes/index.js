@@ -6,4 +6,5 @@ module.exports = function initRoutes(app) {
   app.use(require("./produtosCompras"));
   app.use(require("./responsaveis"));
   app.use(require("./restricoes"));
+  app.use(require("./autenticacao"));
 };
