@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.createTable("restricao", {
       id: {
         type: Sequelize.INTEGER,
-        autoIcrement: true,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },

@@ -42,11 +42,13 @@ class ResponsavelController {
   async update(req, res) {
     const { id, nome, email, senha, saldo, cpf, telefone } = req.body;
 
+    let encryptedPassword = await passwordEncrypt(senha);
+
     const responsavel = await Responsavel.update(
       {
         nome,
         email,
-        senha,
+        senha: encryptedPassword,
         cpf,
         telefone,
         saldo,

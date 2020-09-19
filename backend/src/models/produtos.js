@@ -1,37 +1,27 @@
-/* jshint indent: 2 */
+const { Model, DataTypes } = require("sequelize");
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('produtos', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
-    id_cantina: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'cantina',
-        key: 'id'
+class Produtos extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        nome: DataTypes.STRING,
+        valor: DataTypes.DECIMAL,
+        descricao: DataTypes.STRING,
+        foto: DataTypes.STRING,
+      },
+      {
+        sequelize,
       }
-    },
-    nome: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    preço: {
-      type: DataTypes.DECIMAL,
-      allowNull: false
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false
-    }
-  }, {
-    tableName: 'produtos'
-  });
-};
+    );
+  }
+
+  static associate(models) {
+    Produtos.belongsToMany(models.Compras, {
+      through: "ProdutosCompra",
+      foreignKey: "id_produto",
+      as: "Produtos_compra",
+    });
+  }
+}
+
+module.exports = Produtos;

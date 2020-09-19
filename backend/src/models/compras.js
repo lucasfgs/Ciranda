@@ -19,6 +19,11 @@ class Compras extends Model {
       foreignKey: "id_aluno",
       as: "alunos",
     });
+    Compras.belongsToMany(models.Produtos, {
+      through: "ProdutosCompra",
+      foreignKey: "id_compra",
+      as: "Produtos_compra",
+    });
   }
 }
 
