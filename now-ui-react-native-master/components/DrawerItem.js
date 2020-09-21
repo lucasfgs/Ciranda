@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Icon from './Icon';
 import nowTheme from '../constants/Theme';
@@ -78,11 +79,16 @@ class DrawerItem extends React.Component {
     return (
       <TouchableOpacity
         style={{ height: 60 }}
-        onPress={() =>
-          title == 'Meu Cadastro'
-            ? navigation.navigate(title == 'Sair' ? 'Meu cadastro' : title)
-            : navigation.navigate(title == 'Sair' ? 'Login' : title)
-        }
+        onPress={async () => {
+          {
+            if (title == 'Meu Cadastro')
+              navigation.navigate(title == 'Sair' ? 'Meu cadastro' : title);
+            else {
+              await AsyncStorage.removeItem('@responsavel');
+              navigation.navigate(title == 'Sair' ? 'Login' : title);
+            }
+          }
+        }}
       >
         <Block flex row style={containerStyles}>
           <Block middle flex={0.1} style={{ marginRight: 5 }}>

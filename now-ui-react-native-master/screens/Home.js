@@ -4,21 +4,15 @@ import { Block, theme, Text } from 'galio-framework';
 
 import { Card, Button } from '../components';
 import articles from '../constants/articles';
+import Dependentes from '../components/Dependentes';
+
 const { width } = Dimensions.get('screen');
 
 class Home extends React.Component {
-  renderArticles = () => {
-    return (
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.articles}>
-        <Block flex></Block>
-      </ScrollView>
-    );
-  };
-
   render() {
     return (
       <Block flex center style={styles.home}>
-        {this.renderArticles()}
+        <Dependentes style={styles.articles} />
       </Block>
     );
   }
@@ -29,7 +23,7 @@ const styles = StyleSheet.create({
     width: width,
   },
   articles: {
-    width: width - theme.SIZES.BASE * 2,
+    width: '100%',
     paddingVertical: theme.SIZES.BASE,
     paddingHorizontal: 2,
     fontFamily: 'montserrat-regular',

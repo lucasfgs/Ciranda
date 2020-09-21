@@ -1,16 +1,12 @@
-import React from 'react';
-import {
-  StyleSheet,
-  ImageBackground,
-  Dimensions,
-  StatusBar,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import { Block, Checkbox, Text, Button as GaButton, theme } from 'galio-framework';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
+import { Block, Checkbox, Text, Button as GaButton, theme, Input } from 'galio-framework';
+import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-community/async-storage';
 
-import { Button, Icon, Input } from '../components';
+import { Button, Icon } from '../components';
 import { Images, nowTheme } from '../constants';
+import api from '../services/api';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -18,108 +14,143 @@ const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
 
-class Login extends React.Component {
-  render() {
-    const { navigation } = this.props;
-    return (
-      <DismissKeyboard>
-        <Block flex middle>
-          <ImageBackground
-            source={Images.RegisterBackground}
-            style={styles.imageBackgroundContainer}
-            imageStyle={styles.imageBackground}
-          >
-            <Block flex middle>
-              <Block style={styles.registerContainer}>
-                <Block flex space="evenly">
-                  <Block flex={0.5} middle space="between">
-                    <Block center flex={0.9}>
-                      <Block flex space="between">
-                        <Text
-                          style={{
-                            fontFamily: 'montserrat-regular',
-                            textAlign: 'center',
-                          }}
-                          color="#333"
-                          size={24}
-                        >
-                          Entrar
-                        </Text>
-                        <Block>
-                          <Block width={width * 0.8}>
-                            <Input
-                              placeholder="Email"
-                              style={styles.inputs}
-                              iconContent={
-                                <Icon
-                                  size={16}
-                                  color="#ADB5BD"
-                                  name="email-852x"
-                                  family="NowExtra"
-                                  style={styles.inputIcons}
-                                />
-                              }
-                            />
-                          </Block>
-                          <Block width={width * 0.8} style={{ marginBottom: 5 }}>
-                            <Input
-                              placeholder="Senha"
-                              style={styles.inputs}
-                              iconContent={
-                                <Icon
-                                  size={16}
-                                  color="#ADB5BD"
-                                  name="lock1"
-                                  family="AntDesign"
-                                  style={styles.inputIcons}
-                                />
-                              }
-                            />
-                          </Block>
+function Login({ navigation }) {
+  const [responsavel, setResponsavel] = useState({
+    email: '',
+    senha: '',
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function verificaLogin() {
+      const jsonValue = await AsyncStorage.getItem('@responsavel');
+      if (jsonValue) {
+        navigation.navigate('App');
+      }
+    }
+    verificaLogin();
+  }, []);
+
+  async function realizarLogin() {
+    setLoading(true);
+    const { senha, email } = responsavel;
+    try {
+      let response = await api.post('/responsavel/logar', {
+        email,
+        senha,
+        tipo: 'R',
+      });
+      const jsonValue = JSON.stringify(response.data);
+      await AsyncStorage.setItem('@responsavel', jsonValue);
+      setLoading(false);
+      navigation.navigate('App');
+    } catch (error) {
+      setLoading(false);
+      Toast.show('Falha ao acessar!');
+    }
+  }
+
+  return (
+    <DismissKeyboard>
+      <Block flex middle>
+        <Block
+          // source={Images.RegisterBackground}
+          style={styles.imageBackgroundContainer}
+          // imageStyle={styles.imageBackground}
+        >
+          <Block flex middle>
+            <Block style={styles.registerContainer}>
+              <Block flex space="evenly">
+                <Block flex={1} middle space="between">
+                  <Image source={Images.Logo} style={styles.logo} />
+                  <Block center flex={1}>
+                    <Block flex>
+                      <Block>
+                        <Block width={width * 0.8}>
+                          <Input
+                            placeholder="Email"
+                            autoCapitalize="none"
+                            style={styles.inputs}
+                            onChangeText={(text) => setResponsavel({ ...responsavel, email: text })}
+                            iconContent={
+                              <Icon
+                                loading={loading}
+                                size={16}
+                                color="#ADB5BD"
+                                name="email-852x"
+                                family="NowExtra"
+                                style={styles.inputIcons}
+                              />
+                            }
+                          />
                         </Block>
-                        <Block center>
-                          <Button
-                            color="primary"
-                            round
-                            style={styles.createButton}
-                            onPress={() => navigation.navigate('App')}
-                          >
-                            <Text
-                              style={{ fontFamily: 'montserrat-bold' }}
-                              size={14}
-                              color={nowTheme.COLORS.WHITE}
-                            >
-                              Acessar
-                            </Text>
-                          </Button>
+                        <Block width={width * 0.8} style={{ marginBottom: 5 }}>
+                          <Input
+                            placeholder="Senha"
+                            password={true}
+                            autoCapitalize="none"
+                            style={styles.inputs}
+                            onChangeText={(text) => setResponsavel({ ...responsavel, senha: text })}
+                            iconContent={
+                              <Icon
+                                size={16}
+                                color="#ADB5BD"
+                                name="lock1"
+                                family="AntDesign"
+                                style={styles.inputIcons}
+                              />
+                            }
+                          />
+                        </Block>
+                      </Block>
+                      <Block center>
+                        <Button
+                          color="primary"
+                          round
+                          loading={loading}
+                          style={styles.createButton}
+                          onPress={realizarLogin}
+                        >
                           <Text
                             style={{ fontFamily: 'montserrat-bold' }}
-                            size={12}
-                            color={nowTheme.COLORS.BLACK}
+                            size={14}
+                            color={nowTheme.COLORS.WHITE}
                           >
-                            Ainda não possuí uma conta?
+                            Acessar
                           </Text>
-                          <Button color="" color="warning" round style={styles.registerButton}>
-                            <Text
-                              style={{ fontFamily: 'montserrat-bold' }}
-                              size={14}
-                              color={nowTheme.COLORS.WHITE}
-                            >
-                              Criar conta
-                            </Text>
-                          </Button>
-                        </Block>
+                        </Button>
+                        <Text
+                          style={{ fontFamily: 'montserrat-bold' }}
+                          size={12}
+                          color={nowTheme.COLORS.BLACK}
+                        >
+                          Ainda não possuí uma conta?
+                        </Text>
+                        <Button
+                          color="warning"
+                          round
+                          style={styles.registerButton}
+                          onPress={() => navigation.navigate('Register')}
+                        >
+                          <Text
+                            style={{ fontFamily: 'montserrat-bold' }}
+                            size={14}
+                            color={nowTheme.COLORS.WHITE}
+                          >
+                            Criar conta
+                          </Text>
+                        </Button>
                       </Block>
                     </Block>
                   </Block>
                 </Block>
               </Block>
             </Block>
-          </ImageBackground>
+          </Block>
         </Block>
-      </DismissKeyboard>
-    );
-  }
+      </Block>
+    </DismissKeyboard>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -128,6 +159,7 @@ const styles = StyleSheet.create({
     height: height,
     padding: 0,
     zIndex: 1,
+    backgroundColor: '#ff9f43',
   },
   imageBackground: {
     width: width,
@@ -179,6 +211,17 @@ const styles = StyleSheet.create({
     borderRadius: theme.SIZES.BASE * 1.75,
     justifyContent: 'center',
     marginHorizontal: 10,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  logoText: {
+    textAlign: 'center',
+    fontSize: 19,
+    fontWeight: 'bold',
+    letterSpacing: 5,
+    textTransform: 'uppercase',
   },
 });
 

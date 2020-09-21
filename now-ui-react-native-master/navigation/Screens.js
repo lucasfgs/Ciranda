@@ -107,11 +107,11 @@ function HomeStack(props) {
   return (
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
-        name="Início"
+        name="Dependentes"
         component={Home}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Início" navigation={navigation} scene={scene} />
+            <Header title="Dependentes" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}
@@ -149,9 +149,9 @@ function AppStack(props) {
           fontWeight: 'normal',
         },
       }}
-      initialRouteName="Início"
+      initialRouteName="Dependentes"
     >
-      <Drawer.Screen name="Início" component={HomeStack} />
+      <Drawer.Screen name="Dependentes" component={HomeStack} />
       <Drawer.Screen name="Components" component={ComponentsStack} />
       <Drawer.Screen name="Articles" component={ArticlesStack} />
       <Drawer.Screen name="Profile" component={ProfileStack} />
@@ -166,6 +166,13 @@ export default function LoginStack(props) {
       <Stack.Screen
         name="Login"
         component={Login}
+        option={{
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
         option={{
           headerTransparent: true,
         }}
