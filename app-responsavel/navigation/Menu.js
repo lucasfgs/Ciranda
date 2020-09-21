@@ -12,7 +12,7 @@ const { width } = Dimensions.get('screen');
 function CustomDrawerContent({ drawerPosition, navigation, profile, focused, state, ...rest }) {
   const insets = useSafeArea();
 
-  const screens = ['Dependentes', 'Histórico', 'Adicionar Fundos'];
+  const screens = ['Dependentes', 'Histórico', 'Adicionar Fundos', 'Meu Cadastro'];
   return (
     <Block style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
       <Block style={styles.header}>
@@ -52,7 +52,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
               }}
             />
           </Block>
-          <DrawerCustomItem title="Meu Cadastro" navigation={navigation} />
+          {/* <DrawerCustomItem title="Meu Cadastro" navigation={navigation} /> */}
           <DrawerCustomItem title="Sair" navigation={navigation} />
         </ScrollView>
       </Block>

@@ -86,7 +86,7 @@ const Dependentes = () => {
   async function receberAlunos() {
     const jsonValue = await AsyncStorage.getItem('@responsavel');
     let responsavel = JSON.parse(jsonValue);
-
+    console.log(responsavel);
     let response = await api.get(`/responsavel/${responsavel.id}/alunos/listar`);
     setAlunos(response.data);
   }

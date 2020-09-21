@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Block, theme, Text } from 'galio-framework';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { Card, Button } from '../components';
 import articles from '../constants/articles';
@@ -8,14 +9,12 @@ import Dependentes from '../components/Dependentes';
 
 const { width } = Dimensions.get('screen');
 
-class Home extends React.Component {
-  render() {
-    return (
-      <Block flex center style={styles.home}>
-        <Dependentes style={styles.articles} />
-      </Block>
-    );
-  }
+function Home() {
+  return (
+    <Block flex center style={styles.home}>
+      <Dependentes style={styles.articles} />
+    </Block>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
 import { Block, Checkbox, Text, Button as GaButton, theme, Input } from 'galio-framework';
 import Toast from 'react-native-simple-toast';

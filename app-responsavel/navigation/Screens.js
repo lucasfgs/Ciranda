@@ -9,7 +9,7 @@ import Home from '../screens/Home';
 import Pro from '../screens/Pro';
 import Profile from '../screens/Profile';
 import Register from '../screens/Register';
-import Components from '../screens/Components';
+import Historico from '../screens/Historico';
 import Articles from '../screens/Articles';
 import Login from '../screens/Login';
 import SettingsScreen from '../screens/Settings';
@@ -26,13 +26,13 @@ const Drawer = createDrawerNavigator();
 
 function ComponentsStack(props) {
   return (
-    <Stack.Navigator initialRouteName="Components" mode="card" headerMode="screen">
+    <Stack.Navigator initialRouteName="Historico" mode="card" headerMode="screen">
       <Stack.Screen
-        name="Components"
-        component={Components}
+        name="Histórico"
+        component={Historico}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Components" navigation={navigation} scene={scene} />
+            <Header title="Histórico" navigation={navigation} scene={scene} />
           ),
           backgroundColor: '#FFFFFF',
         }}
@@ -79,24 +79,16 @@ function ProfileStack(props) {
   return (
     <Stack.Navigator initialRouteName="Profile" mode="card" headerMode="screen">
       <Stack.Screen
-        name="Profile"
+        name="Meu cadastro"
         component={Profile}
         options={{
-          header: ({ navigation, scene }) => (
-            <Header transparent white title="Profile" navigation={navigation} scene={scene} />
-          ),
-          cardStyle: { backgroundColor: '#FFFFFF' },
+          // header: ({ navigation, scene }) => (
+          //   <Header transparent white title="Profile" navigation={navigation} scene={scene} />
+          // ),
+          cardStyle: { backgroundColor: '#FFFFFF', color: '#fff' },
+          title: false,
           headerTransparent: true,
-        }}
-      />
-      <Stack.Screen
-        name="Pro"
-        component={Pro}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header title="" back white transparent navigation={navigation} scene={scene} />
-          ),
-          headerTransparent: true,
+          // header: false,
         }}
       />
     </Stack.Navigator>
@@ -149,13 +141,13 @@ function AppStack(props) {
           fontWeight: 'normal',
         },
       }}
-      initialRouteName="Dependentes"
+      initialRouteName="Histórico"
     >
       <Drawer.Screen name="Dependentes" component={HomeStack} />
-      <Drawer.Screen name="Components" component={ComponentsStack} />
+      <Drawer.Screen name="Histórico" component={ComponentsStack} />
       <Drawer.Screen name="Articles" component={ArticlesStack} />
-      <Drawer.Screen name="Profile" component={ProfileStack} />
-      <Drawer.Screen name="Account" component={AccountStack} />
+      <Drawer.Screen name="Meu Cadastro" component={ProfileStack} />
+      {/* <Drawer.Screen name="Meu Cadastro" component={AccountStack} /> */}
     </Drawer.Navigator>
   );
 }

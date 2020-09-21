@@ -21,14 +21,14 @@ const assetImages = [
   Images.CreativeTimLogo,
   Images.InvisionLogo,
   Images.RegisterBackground,
-  Images.ProfileBackground
+  Images.ProfileBackground,
 ];
 
 // cache product images
-articles.map(article => assetImages.push(article.image));
+articles.map((article) => assetImages.push(article.image));
 
 function cacheImages(images) {
-  return images.map(image => {
+  return images.map((image) => {
     if (typeof image === 'string') {
       return Image.prefetch(image);
     } else {
@@ -40,7 +40,7 @@ function cacheImages(images) {
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
-    fontLoaded: false
+    fontLoaded: false,
   };
 
   // async componentDidMount() {
@@ -77,14 +77,14 @@ export default class App extends React.Component {
   _loadResourcesAsync = async () => {
     await Font.loadAsync({
       'montserrat-regular': require('./assets/font/Montserrat-Regular.ttf'),
-      'montserrat-bold': require('./assets/font/Montserrat-Bold.ttf')
+      'montserrat-bold': require('./assets/font/Montserrat-Bold.ttf'),
     });
 
     this.setState({ fontLoaded: true });
     return Promise.all([...cacheImages(assetImages)]);
   };
 
-  _handleLoadingError = error => {
+  _handleLoadingError = (error) => {
     // In this case, you might want to report the error to your error
     // reporting service, for example Sentry
     console.warn(error);
