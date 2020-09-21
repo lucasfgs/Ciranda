@@ -1,17 +1,24 @@
-const { Responsavel } = require("../models");
+const Responsavel = require("../models/Responsavel");
+const { passwordEncrypt } = require("../Utils");
 
 class ResponsavelController {
   async store(req, res) {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha, cpf, telefone } = req.body;
+    let encryptedPassword = await passwordEncrypt(senha);
 
-    let responsavel = await Responsavel.create({
-      nome,
-      email,
-      senha,
-      saldo: 0,
-    });
-
-    res.status(201).json(responsavel);
+    try {
+      let responsavel = await Responsavel.create({
+        nome,
+        email,
+        senha: encryptedPassword,
+        cpf,
+        telefone,
+        saldo: 0,
+      });
+      res.status(201).json(responsavel);
+    } catch (error) {
+      res.status(400).json("Erro ao realizar cadastro");
+    }
   }
   async index(req, res) {
     let responsaveis = await Responsavel.findAll();
@@ -33,13 +40,17 @@ class ResponsavelController {
     res.json(responsavel);
   }
   async update(req, res) {
-    const { id, nome, email, senha, saldo } = req.body;
+    const { id, nome, email, senha, saldo, cpf, telefone } = req.body;
+
+    let encryptedPassword = await passwordEncrypt(senha);
 
     const responsavel = await Responsavel.update(
       {
         nome,
         email,
-        senha,
+        senha: encryptedPassword,
+        cpf,
+        telefone,
         saldo,
       },
       { where: { id } }

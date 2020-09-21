@@ -1,33 +1,20 @@
-/* jshint indent: 2 */
+const { Model, DataTypes } = require("sequelize");
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('cantina', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
-    nome: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    senha: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false
-    }
-  }, {
-    tableName: 'cantina'
-  });
-};
+class Cantina extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        nome: DataTypes.STRING,
+        senha: DataTypes.STRING,
+        cpf_cnpj: DataTypes.STRING,
+        email: DataTypes.STRING,
+        telefone: DataTypes.STRING,
+      },
+      {
+        sequelize,
+      }
+    );
+  }
+}
+
+module.exports = Cantina;
