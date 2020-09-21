@@ -45,6 +45,7 @@ function Login({ navigation }) {
       setLoading(false);
       navigation.navigate('App');
     } catch (error) {
+      console.log(error);
       setLoading(false);
       Toast.show('Falha ao acessar!');
     }
@@ -124,7 +125,7 @@ function Login({ navigation }) {
                           size={12}
                           color={nowTheme.COLORS.BLACK}
                         >
-                          Ainda não possuí uma conta?
+                          Ainda não possui uma conta?
                         </Text>
                         <Button
                           color="warning"

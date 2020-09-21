@@ -87,22 +87,27 @@ const CadastrarDependentesModal = ({ visible, onChange }) => {
 
           <View style={styles.footer}>
             <Button
-              style={{ width: '50%', backgroundColor: '#d63031', borderRadius: 0, height: 40 }}
+              style={{ width: '50%', backgroundColor: '#fff', borderRadius: 0, height: 40 }}
               onPress={() => onChange(false)}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Icon
+                {/* <Icon
                   size={20}
-                  color="#ddd"
+                  color="#d63031"
                   name="adduser"
                   family="AntDesign"
                   style={styles.inputIcons}
-                />
-                <Text style={{ fontSize: 20, color: '#ddd' }}> Cancelar </Text>
+                /> */}
+                <Text style={{ fontSize: 20, color: '#d63031' }}> Cancelar </Text>
               </View>
             </Button>
             <Button
-              style={{ width: '50%', backgroundColor: '#009432', borderRadius: 0, height: 40 }}
+              style={{
+                width: '50%',
+                // backgroundColor: '#009432',
+                borderRadius: 0,
+                height: 40,
+              }}
               onPress={salvarAluno}
               loading={loading}
             >
@@ -129,6 +134,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   header: {
     width: '100%',

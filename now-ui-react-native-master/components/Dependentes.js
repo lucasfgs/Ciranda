@@ -8,24 +8,53 @@ import CadastrarDependentes from './CadastrarDependentesModal';
 
 import api from '../services/api';
 
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-    <View style={styles.buttonContainer}>
-      <Button style={{ width: '20%', backgroundColor: '#b2bec3' }}>
-        <Icon size={16} color="#FFFF" name="qrcode" family="AntDesign" style={styles.inputIcons} />
-      </Button>
+const Item = ({ id, title }) => {
+  async function deletarItem() {
+    try {
+      let resp = await api.delete(`/alunos/deletar/${id}`);
+      console.log(resp);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      <Button style={{ width: '20%', backgroundColor: '#0abde3' }}>
-        <Icon size={16} color="#ddd" name="edit" family="AntDesign" style={styles.inputIcons} />
-      </Button>
+  return (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+      <View style={styles.buttonContainer}>
+        <Button style={styles.button}>
+          <Icon
+            size={16}
+            color="#1c1c1c"
+            name="qrcode"
+            family="AntDesign"
+            style={styles.inputIcons}
+          />
+        </Button>
 
-      <Button style={{ width: '20%', backgroundColor: '#ee5253' }}>
-        <Icon size={16} color="#ddd" name="delete" family="AntDesign" style={styles.inputIcons} />
-      </Button>
+        <Button style={styles.button}>
+          <Icon
+            size={16}
+            color="#0abde3"
+            name="edit"
+            family="AntDesign"
+            style={styles.inputIcons}
+          />
+        </Button>
+
+        <Button style={styles.button} onPress={deletarItem}>
+          <Icon
+            size={16}
+            color="#ee5253"
+            name="delete"
+            family="AntDesign"
+            style={styles.inputIcons}
+          />
+        </Button>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const Dependentes = () => {
   const [cadastrarModal, setCadastrarModal] = useState(false);
@@ -51,9 +80,14 @@ const Dependentes = () => {
       <SafeAreaView style={styles.container}>
         <CadastrarDependentes visible={cadastrarModal} onChange={setCadastrarModal} />
 
-        <FlatList data={alunos} renderItem={renderItem} keyExtractor={(item) => item.id} />
+        <FlatList
+          data={alunos}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
         <Button
-          style={{ width: '100%', backgroundColor: '#009432', borderRadius: 0, height: 50 }}
+          style={{ width: '100%', borderRadius: 0, height: 50 }}
+          color="primary"
           onPress={() => setCadastrarModal(true)}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -84,18 +118,26 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     marginHorizontal: 16,
     paddingVertical: 5,
-
-    borderBottomWidth: 0.5,
+    backgroundColor: '#f7f5f5',
+    borderRadius: 5,
+    // borderBottomWidth: 0.2,
   },
   title: {
-    fontSize: 26,
+    fontSize: 18,
     alignSelf: 'center',
     width: '100%',
+    marginLeft: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
     marginLeft: 'auto',
+    marginRight: 5,
     justifyContent: 'flex-end',
+  },
+  button: {
+    marginHorizontal: 2,
+    width: '20%',
+    backgroundColor: '#fff',
   },
 });
 
