@@ -5,10 +5,11 @@ import { Button } from 'galio-framework';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import CadastrarDependentes from './CadastrarDependentesModal';
+import QRCodeDependentes from './QRCodeDependentesModal';
 
 import api from '../services/api';
 
-const Item = ({ id, title }) => {
+const Item = ({ id, title, setQrCodeModal, setAlunoSelecionado }) => {
   async function deletarItem() {
     try {
       let resp = await api.delete(`/alunos/deletar/${id}`);
@@ -22,7 +23,13 @@ const Item = ({ id, title }) => {
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.buttonContainer}>
-        <Button style={styles.button}>
+        <Button
+          style={styles.button}
+          onPress={() => {
+            setAlunoSelecionado(id);
+            setQrCodeModal(true);
+          }}
+        >
           <Icon
             size={16}
             color="#1c1c1c"
@@ -58,7 +65,10 @@ const Item = ({ id, title }) => {
 
 const Dependentes = () => {
   const [cadastrarModal, setCadastrarModal] = useState(false);
+  const [qrCodeModal, setQrCodeModal] = useState(false);
   const [alunos, setAlunos] = useState([]);
+  const [alunoSelecionado, setAlunoSelecionado] = useState(null);
+
   async function receberAlunos() {
     const jsonValue = await AsyncStorage.getItem('@responsavel');
     let responsavel = JSON.parse(jsonValue);
@@ -71,18 +81,26 @@ const Dependentes = () => {
     console.log(cadastrarModal);
   }, [cadastrarModal]);
 
-  const renderItem = ({ item }) => {
-    return <Item title={item.nome} />;
+  const renderItem = ({ item }, setQrCodeModal, setAlunoSelecionado) => {
+    return (
+      <Item
+        title={item.nome}
+        id={item.id}
+        setQrCodeModal={setQrCodeModal}
+        setAlunoSelecionado={setAlunoSelecionado}
+      />
+    );
   };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
         <CadastrarDependentes visible={cadastrarModal} onChange={setCadastrarModal} />
+        <QRCodeDependentes visible={qrCodeModal} onChange={setQrCodeModal} id={alunoSelecionado} />
 
         <FlatList
           data={alunos}
-          renderItem={renderItem}
+          renderItem={(item) => renderItem(item, setQrCodeModal, setAlunoSelecionado)}
           keyExtractor={(item) => item.id.toString()}
         />
         <Button
