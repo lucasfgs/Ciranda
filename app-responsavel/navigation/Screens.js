@@ -5,13 +5,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // screens
-import Home from '../screens/Home';
+import Dependentes from '../screens/Dependentes';
 import Pro from '../screens/Pro';
-import Profile from '../screens/Profile';
+import MeuCadastro from '../screens/MeuCadastro';
 import Register from '../screens/Register';
 import Historico from '../screens/Historico';
 import Articles from '../screens/Articles';
 import Login from '../screens/Login';
+import Adicionar from '../screens/Adicionar';
 import SettingsScreen from '../screens/Settings';
 // drawer
 import CustomDrawerContent from './Menu';
@@ -80,7 +81,7 @@ function ProfileStack(props) {
     <Stack.Navigator initialRouteName="Profile" mode="card" headerMode="screen">
       <Stack.Screen
         name="Meu cadastro"
-        component={Profile}
+        component={MeuCadastro}
         options={{
           // header: ({ navigation, scene }) => (
           //   <Header transparent white title="Profile" navigation={navigation} scene={scene} />
@@ -100,10 +101,26 @@ function HomeStack(props) {
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="Dependentes"
-        component={Home}
+        component={Dependentes}
         options={{
           header: ({ navigation, scene }) => (
             <Header title="Dependentes" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+function AdicionarStack(props) {
+  return (
+    <Stack.Navigator mode="card" headerMode="screen">
+      <Stack.Screen
+        name="Adicionar fundos"
+        component={Adicionar}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Adicionar fundos" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}
@@ -141,11 +158,11 @@ function AppStack(props) {
           fontWeight: 'normal',
         },
       }}
-      initialRouteName="Histórico"
+      initialRouteName="Dependentes"
     >
       <Drawer.Screen name="Dependentes" component={HomeStack} />
       <Drawer.Screen name="Histórico" component={ComponentsStack} />
-      <Drawer.Screen name="Articles" component={ArticlesStack} />
+      <Drawer.Screen name="Adicionar Fundos" component={AdicionarStack} />
       <Drawer.Screen name="Meu Cadastro" component={ProfileStack} />
       {/* <Drawer.Screen name="Meu Cadastro" component={AccountStack} /> */}
     </Drawer.Navigator>

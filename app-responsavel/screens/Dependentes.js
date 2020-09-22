@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Block, theme, Text } from 'galio-framework';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import { Card, Button } from '../components';
 import articles from '../constants/articles';

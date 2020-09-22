@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
 import { Icon, Input } from '../components';
 import { Button } from 'galio-framework';
-import AsyncStorage from '@react-native-community/async-storage';
+import { connect } from 'react-redux';
 
 import CadastrarDependentes from './CadastrarDependentesModal';
 import EditarDependentes from './EditarDependentesModal';
@@ -75,7 +75,7 @@ const Item = ({
   );
 };
 
-const Dependentes = () => {
+const Dependentes = ({ responsavel }) => {
   const [cadastrarModal, setCadastrarModal] = useState(false);
   const [editarModal, setEditarModal] = useState(false);
   const [excluirModal, setExcluirModal] = useState(false);
@@ -84,9 +84,6 @@ const Dependentes = () => {
   const [alunoSelecionado, setAlunoSelecionado] = useState(null);
 
   async function receberAlunos() {
-    const jsonValue = await AsyncStorage.getItem('@responsavel');
-    let responsavel = JSON.parse(jsonValue);
-    console.log(responsavel);
     let response = await api.get(`/responsavel/${responsavel.id}/alunos/listar`);
     setAlunos(response.data);
   }
@@ -188,4 +185,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dependentes;
+const mapStateToProps = (state) => ({
+  responsavel: state.responsavel,
+});
+
+export default connect(mapStateToProps)(Dependentes);

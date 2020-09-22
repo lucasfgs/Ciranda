@@ -4,6 +4,9 @@ import { Block, Checkbox, Text, Button as GaButton, theme, Input } from 'galio-f
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import { login } from '../store/actions';
+import { connect } from 'react-redux';
+
 import { Button, Icon } from '../components';
 import { Images, nowTheme } from '../constants';
 import api from '../services/api';
@@ -14,7 +17,7 @@ const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
 
-function Login({ navigation }) {
+function Login({ navigation, login }) {
   const [responsavel, setResponsavel] = useState({
     email: '',
     senha: '',
@@ -24,7 +27,19 @@ function Login({ navigation }) {
   useEffect(() => {
     async function verificaLogin() {
       const jsonValue = await AsyncStorage.getItem('@responsavel');
+
       if (jsonValue) {
+        let responsavel = JSON.parse(jsonValue);
+        console.log(responsavel.id, responsavel);
+        login(
+          responsavel.id,
+          responsavel.nome,
+          responsavel.email,
+          responsavel.senha,
+          responsavel.cpf,
+          responsavel.telefone,
+          responsavel.saldo
+        );
         navigation.navigate('App');
       }
     }
@@ -40,7 +55,18 @@ function Login({ navigation }) {
         senha,
         tipo: 'R',
       });
+      login(
+        response.data.id,
+        response.data.nome,
+        response.data.email,
+        response.data.senha,
+        response.data.cpf,
+        response.data.telefone,
+        response.data.saldo
+      );
+
       const jsonValue = JSON.stringify(response.data);
+
       await AsyncStorage.setItem('@responsavel', jsonValue);
       setLoading(false);
       navigation.navigate('App');
@@ -226,4 +252,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (id, nome, email, senha, cpf, telefone, saldo) =>
+      dispatch(login(id, nome, email, senha, cpf, telefone, saldo)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Login);

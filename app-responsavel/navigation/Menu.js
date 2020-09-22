@@ -4,12 +4,21 @@ import { Block, Text, theme } from 'galio-framework';
 import { useSafeArea } from 'react-native-safe-area-context';
 import Images from '../constants/Images';
 import { DrawerItem as DrawerCustomItem, Icon } from '../components';
+import { connect } from 'react-redux';
 
 import nowTheme from '../constants/Theme';
 
 const { width } = Dimensions.get('screen');
 
-function CustomDrawerContent({ drawerPosition, navigation, profile, focused, state, ...rest }) {
+function CustomDrawerContent({
+  drawerPosition,
+  navigation,
+  profile,
+  focused,
+  state,
+  responsavel,
+  ...rest
+}) {
   const insets = useSafeArea();
 
   const screens = ['Dependentes', 'Histórico', 'Adicionar Fundos', 'Meu Cadastro'];
@@ -22,7 +31,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
 
         <Block row style={styles.moneyContainer}>
           <Text style={styles.moneyText} color="#ffffff">
-            Saldo: <Text color="#ffffff">200 R$</Text>
+            Saldo: <Text color="#ffffff">{responsavel.saldo} R$</Text>
           </Text>
         </Block>
 
@@ -92,4 +101,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomDrawerContent;
+const mapStateToProps = (state) => ({
+  responsavel: state.responsavel,
+});
+
+export default connect(mapStateToProps)(CustomDrawerContent);
