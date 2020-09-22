@@ -6,8 +6,6 @@ import Images from '../constants/Images';
 import { DrawerItem as DrawerCustomItem, Icon } from '../components';
 import { connect } from 'react-redux';
 
-import nowTheme from '../constants/Theme';
-
 const { width } = Dimensions.get('screen');
 
 function CustomDrawerContent({
