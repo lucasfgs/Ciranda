@@ -23,6 +23,7 @@ const user = (state = INITIAL_STATE, action) => {
       };
     case 'SALDO':
       return {
+        ...state,
         saldo: action.saldo,
       };
     default:

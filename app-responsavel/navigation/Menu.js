@@ -29,7 +29,7 @@ function CustomDrawerContent({
 
         <Block row style={styles.moneyContainer}>
           <Text style={styles.moneyText} color="#ffffff">
-            Saldo: <Text color="#ffffff">{responsavel.saldo} R$</Text>
+            Saldo: <Text color="#ffffff">{parseFloat(responsavel.saldo).toFixed(2)} R$</Text>
           </Text>
         </Block>
 

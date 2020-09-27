@@ -35,7 +35,7 @@ function Historico({ responsavel }) {
             return (
               <DataTable.Row key={compra.Data}>
                 <DataTable.Cell>{compra.nome}</DataTable.Cell>
-                <DataTable.Cell>{compra.valor_total}</DataTable.Cell>
+                <DataTable.Cell>{parseFloat(compra.valor_total).toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell>{data}</DataTable.Cell>
               </DataTable.Row>
             );

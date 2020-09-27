@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { Button, Icon, Block } from 'galio-framework';
 import Modal from 'react-native-modal';
-import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
+import { connect } from 'react-redux';
 
 import Input from './Input';
 import Restricoes from './Restricoes';
@@ -20,15 +20,12 @@ import api from '../services/api';
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
-const CadastrarDependentesModal = ({ visible, onChange }) => {
+const CadastrarDependentesModal = ({ visible, onChange, responsavel }) => {
   const [nome, setNome] = useState('');
   const [restricoes, setRestricoes] = useState([]);
   const [loading, setLoading] = useState(false);
 
   async function salvarAluno() {
-    const jsonValue = await AsyncStorage.getItem('@responsavel');
-    let responsavel = JSON.parse(jsonValue);
-
     try {
       setLoading(true);
       let response = await api.post('/alunos/criar', {
@@ -45,6 +42,7 @@ const CadastrarDependentesModal = ({ visible, onChange }) => {
 
       response = await api.post('/alunos/retricoes/criar', obj);
       setLoading(false);
+      setRestricoes([]);
       Toast.show('Cadastrado com sucesso!');
       onChange(false);
     } catch (error) {
@@ -151,4 +149,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CadastrarDependentesModal;
+const mapStateToProps = (state) => ({
+  responsavel: state.responsavel,
+});
+
+export default connect(mapStateToProps)(CadastrarDependentesModal);
