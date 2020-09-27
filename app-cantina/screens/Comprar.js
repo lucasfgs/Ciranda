@@ -4,6 +4,12 @@ import { Block, theme, Text, Icon } from 'galio-framework';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Toast from 'react-native-simple-toast';
+import { carregarProdutos, alterarTotal, resetar } from '../store/actions';
+import { connect } from 'react-redux';
+
+import ItemsContainer from '../components/ItemsContainer';
+import BasketContainer from '../components/BasketComponent';
+import Footer from '../components/Footer';
 
 import { Card, Button } from '../components';
 import QrCodeModal from '../components/QrCodeModal';
@@ -11,9 +17,11 @@ import api from '../services/api';
 
 const { width } = Dimensions.get('screen');
 
-function Comprar() {
+const INITIAL_STATE = [{ nome: '', saldo: '' }];
+
+function Comprar({ carregarProdutos, resetar, carrinho }) {
   const [qrCodeModal, setQrCodeModal] = useState(false);
-  const [aluno, setAluno] = useState([{ nome: '', saldo: '' }]);
+  const [aluno, setAluno] = useState(INITIAL_STATE);
   const [produtos, setProdutos] = useState([]);
   const [produtosResponse, setProdutosResponse] = useState([]);
   const [valorTotal, setValorTotal] = useState(0);
@@ -29,11 +37,9 @@ function Comprar() {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(valorTotal);
-  }, [valorTotal]);
-
   const handleBarCodeScanned = async ({ type, data }) => {
+    setAluno(INITIAL_STATE);
+    resetar();
     setScanned(true);
     setQrCodeModal(false);
     let response = await api.get(`/alunos/${data}/responsaveis/listar`);
@@ -42,21 +48,19 @@ function Comprar() {
     response = await api.get(`/alunos/${data}/cantinas/produtos/listar/`);
     setProdutosResponse(response.data);
 
-    let obj = [
-      {
-        children: response.data,
-      },
-    ];
-    setProdutos(obj);
+    let produtos = response.data.map((produto) => {
+      return { ...produto, quantidade: 0 };
+    });
 
+    carregarProdutos(produtos);
     Toast.show('QRCode lido com sucesso!');
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <Text>Requerindo permissao para camera!</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>Sem acesso a camera!</Text>;
   }
 
   function onSelectedItemsChange(selectedItems) {
@@ -66,104 +70,63 @@ function Comprar() {
   async function realizarVenda() {
     try {
       setLoading(true);
-      let saldoResponsavel = parseFloat(aluno[0].saldo) - valorTotal;
-      console.log(saldoResponsavel);
-      console.log(aluno[0].id_responsavel);
-      await api.put('/responsaveis/atualizar', {
-        id: aluno[0].id_responsavel,
-        saldo: saldoResponsavel,
-      });
 
       await api.post('/alunos/compras/criar', {
         id_aluno: aluno[0].id,
-        valor_total: valorTotal,
+        valor_total: carrinho.valorTotal,
       });
       Toast.show('Venda realizada com sucesso!');
     } catch (error) {
-      console.log(error);
       Toast.show('Erro ao realizar venda!');
     }
-    setLoading(true);
-  }
-
-  function handleConfirm() {
-    setValorTotal(0);
-    let count = 0;
-    produtosResponse.map((produto) => {
-      produtosSelecionados.map((produtoSelectionado) => {
-        if (produto.id == produtoSelectionado) {
-          // setValorTotal(valorTotal + parseFloat(produto.valor));
-          setValorTotal((valorAntigo) => valorAntigo + parseFloat(produto.valor));
-          count++;
-        }
-      });
-    });
+    setLoading(false);
+    setAluno(INITIAL_STATE);
+    resetar();
   }
 
   return (
-    <Block flex center style={styles.container}>
+    <View style={{ flex: 1 }}>
       <QrCodeModal
         visible={qrCodeModal}
         onChange={setQrCodeModal}
         scanned={scanned}
         handleBarCodeScanned={handleBarCodeScanned}
       />
-      <View style={styles.header}>
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textTitle}>Aluno:</Text>
-            <Text style={styles.textContent}>{aluno[0].nome}</Text>
+      <View style={styles.headerStyle}>
+        <View style={styles.header}>
+          <View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.textTitle}>Aluno:</Text>
+              <Text style={styles.textContent}>{aluno[0].nome}</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.textTitle}>Saldo:</Text>
+              <Text style={styles.textContent}>
+                {aluno[0].saldo && 'R$' + parseFloat(aluno[0].saldo).toFixed(2)}
+              </Text>
+            </View>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textTitle}>Saldo:</Text>
-            <Text style={styles.textContent}>R$ {aluno[0].saldo}</Text>
-          </View>
+
+          <Button
+            style={styles.buttonQrCode}
+            onPress={() => {
+              setScanned(false);
+              setQrCodeModal(true);
+            }}
+          >
+            <Icon
+              size={16}
+              color="#1c1c1c"
+              name="qrcode"
+              family="AntDesign"
+              style={styles.inputIcons}
+            />
+          </Button>
         </View>
-
-        <Button
-          style={styles.buttonQrCode}
-          onPress={() => {
-            setScanned(false);
-            setQrCodeModal(true);
-          }}
-        >
-          <Icon
-            size={16}
-            color="#1c1c1c"
-            name="qrcode"
-            family="AntDesign"
-            style={styles.inputIcons}
-          />
-        </Button>
       </View>
-      <View style={styles.content}>
-        <SectionedMultiSelect
-          items={produtos}
-          uniqueKey="id"
-          loading={false}
-          subKey="children"
-          scroll
-          displayKey="nome"
-          selectText="Escolha os produtos"
-          showDropDowns={false}
-          readOnlyHeadings={true}
-          onSelectedItemsChange={onSelectedItemsChange}
-          onConfirm={handleConfirm}
-          onSelectedItemObjectsChange={handleConfirm}
-          selectedItems={produtosSelecionados}
-          confirmText="Confirmar"
-          searchPlaceholderText="Buscar produtos..."
-          selectedText="selecionados"
-        />
-      </View>
-
-      <View style={styles.footer}>
-        <Text style={{ color: '#000', marginBottom: 20 }}>Valor Total: R${valorTotal}</Text>
-        <Button style={styles.buttonVenda} onPress={realizarVenda}>
-          <Text style={{ color: '#fff' }}>Realizar Venda</Text>
-        </Button>
-      </View>
-    </Block>
+      <ItemsContainer />
+      <Footer handleSubmit={realizarVenda} loading={loading} />
+    </View>
   );
 }
 
@@ -173,12 +136,21 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 100,
-    paddingRight: 60,
-    paddingLeft: 20,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  headerStyle: {
+    flex: 0.6,
+    elevation: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderBottomWidth: 1,
+    borderColor: '#e2e2e2',
   },
   buttonQrCode: {
     backgroundColor: '#ddd',
@@ -208,4 +180,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Comprar;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetar: () => dispatch(resetar()),
+    carregarProdutos: (produtos) => dispatch(carregarProdutos(produtos)),
+    alterarTotal: (valorTotal, quantidadeTotal) =>
+      dispatch(alterarTotal(valorTotal, quantidadeTotal)),
+  };
+};
+
+const mapStateToProps = (state) => ({
+  carrinho: state.carrinho,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Comprar);

@@ -19,7 +19,7 @@ const ExcluirDependentesModal = ({ visible, onChange, id }) => {
   async function deletarItem() {
     try {
       setLoading(true);
-      await api.delete(`/alunos/deletar/${id}`);
+      await api.delete(`/cantinas/produtos/deletar/${id}`);
       Toast.show('Excluido com sucesso!');
     } catch (error) {
       Toast.show('Falha ao excluir!');

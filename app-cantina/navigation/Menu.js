@@ -27,12 +27,6 @@ function CustomDrawerContent({
           Ciranda
         </Text>
 
-        <Block row style={styles.moneyContainer}>
-          <Text style={styles.moneyText} color="#ffffff">
-            Saldo: <Text color="#ffffff">{responsavel.saldo} R$</Text>
-          </Text>
-        </Block>
-
         <Block right style={styles.headerIcon}>
           <Icon name="align-left-22x" family="NowExtra" size={20} color={'white'} />
         </Block>

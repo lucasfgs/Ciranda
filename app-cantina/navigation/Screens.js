@@ -9,7 +9,7 @@ import Comprar from '../screens/Comprar';
 import Pro from '../screens/Pro';
 import MeuCadastro from '../screens/MeuCadastro';
 import Register from '../screens/Register';
-import Historico from '../screens/Historico';
+import Produtos from '../screens/Produtos';
 import Articles from '../screens/Articles';
 import Login from '../screens/Login';
 import Adicionar from '../screens/Adicionar';
@@ -27,13 +27,13 @@ const Drawer = createDrawerNavigator();
 
 function ComponentsStack(props) {
   return (
-    <Stack.Navigator initialRouteName="Historico" mode="card" headerMode="screen">
+    <Stack.Navigator initialRouteName="Produtos" mode="card" headerMode="screen">
       <Stack.Screen
-        name="Histórico"
-        component={Historico}
+        name="Produtos"
+        component={Produtos}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Histórico" navigation={navigation} scene={scene} />
+            <Header title="Produtos" navigation={navigation} scene={scene} />
           ),
           backgroundColor: '#FFFFFF',
         }}
@@ -161,7 +161,7 @@ function AppStack(props) {
       initialRouteName="Comprar"
     >
       <Drawer.Screen name="Comprar" component={HomeStack} />
-      <Drawer.Screen name="Histórico" component={ComponentsStack} />
+      <Drawer.Screen name="Produtos" component={ComponentsStack} />
       {/* <Drawer.Screen name="Adicionar Fundos" component={AdicionarStack} /> */}
       {/* <Drawer.Screen name="Meu Cadastro" component={ProfileStack} /> */}
       {/* <Drawer.Screen name="Meu Cadastro" component={AccountStack} /> */}

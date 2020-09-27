@@ -16,24 +16,20 @@ import api from '../services/api';
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
-const EditarDependentesModal = ({ visible, onChange, id }) => {
+const EditarProdutosModal = ({ visible, onChange, id }) => {
   const [nome, setNome] = useState('');
+  const [valor, setValor] = useState('');
   const [restricoes, setRestricoes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingContent, setLoadingContent] = useState(false);
   const signal = axios.CancelToken.source();
 
   async function receberAluno() {
+    console.log('Id produto:', id);
     setLoadingContent(true);
-    let response = await api.get(`/alunos/listar/${id}`);
+    let response = await api.get(`/cantinas/produtos/listar/${id}`);
     setNome(response.data.nome);
-
-    response = await api.get(`/alunos/${id}/retricoes/listar`);
-    let restricoesData = response.data;
-    let restricoesProdutos = restricoesData.map((restricao) => {
-      return restricao.id_produto;
-    });
-    setRestricoes(restricoesProdutos);
+    setValor(response.data.valor);
     setLoadingContent(false);
   }
 
@@ -54,21 +50,11 @@ const EditarDependentesModal = ({ visible, onChange, id }) => {
 
     try {
       setLoading(true);
-      let response = await api.put('/alunos/atualizar', {
+      await api.put('/cantinas/produtos/atualizar', {
         id: id,
         nome,
-        id_responsavel: responsavel.id,
+        valor,
       });
-
-      await api.delete(`/alunos/${id}/retricoes/deletar`);
-
-      let obj = {};
-
-      obj.data = restricoes.map((restricao) => {
-        return { id_aluno: id, id_produto: restricao };
-      });
-
-      response = await api.post('/alunos/retricoes/criar', obj);
       setLoading(false);
       Toast.show('Alterado com sucesso!');
       onChange(false);
@@ -94,24 +80,37 @@ const EditarDependentesModal = ({ visible, onChange, id }) => {
 
           <Block style={{ width: '90%', marginTop: 20 }}>
             <Input
-              placeholder="Nome"
+              placeholder="Produto"
               style={styles.inputs}
-              value={nome}
               onChangeText={(text) => setNome(text)}
+              value={nome}
               iconContent={
                 <Icon
                   size={16}
                   color="#ADB5BD"
-                  name="user"
-                  family="AntDesign"
+                  name="price-tag"
+                  family="Entypo"
                   style={styles.inputIcons}
                 />
               }
             />
           </Block>
           <Block style={{ width: '90%', marginTop: 20 }}>
-            {/* <Text>Restrições</Text> */}
-            <Restricoes setRestricoes={setRestricoes} restricoes={restricoes} />
+            <Input
+              placeholder="Valor"
+              style={styles.inputs}
+              onChangeText={(text) => setValor(text)}
+              value={valor}
+              iconContent={
+                <Icon
+                  size={16}
+                  color="#ADB5BD"
+                  name="attach-money"
+                  family="MaterialIcons"
+                  style={styles.inputIcons}
+                />
+              }
+            />
           </Block>
 
           <View style={styles.footer}>
@@ -141,14 +140,6 @@ const EditarDependentesModal = ({ visible, onChange, id }) => {
               loading={loading}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Icon
-                  size={20}
-                  color="#ddd"
-                  name="adduser"
-                  family="AntDesign"
-                  style={styles.inputIcons}
-                />
-
                 <Text style={{ fontSize: 20, color: '#ddd' }}> Alterar </Text>
               </View>
             </Button>
@@ -190,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditarDependentesModal;
+export default EditarProdutosModal;
