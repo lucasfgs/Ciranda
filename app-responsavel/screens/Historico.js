@@ -31,7 +31,7 @@ function Historico({ responsavel }) {
           </DataTable.Header>
           {compras.map((compra) => {
             let data = new Date(compra.Data);
-            data = `${data.getDate()}/${data.getMonth()}/${data.getFullYear()}`;
+            data = `${data.getDate()}/${data.getMonth() + 1}/${data.getFullYear()}`;
             return (
               <DataTable.Row key={compra.Data}>
                 <DataTable.Cell>{compra.nome}</DataTable.Cell>
