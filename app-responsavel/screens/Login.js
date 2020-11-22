@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, Image } fro
 import { Block, Checkbox, Text, Button as GaButton, theme, Input } from 'galio-framework';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
+import { validate } from 'validate.js';
 
 import { login } from '../store/actions';
 import { connect } from 'react-redux';
@@ -49,32 +50,46 @@ function Login({ navigation, login }) {
   async function realizarLogin() {
     setLoading(true);
     const { senha, email } = responsavel;
-    try {
-      let response = await api.post('/responsavel/logar', {
-        email,
-        senha,
-        tipo: 'R',
-      });
-      login(
-        response.data.id,
-        response.data.nome,
-        response.data.email,
-        response.data.senha,
-        response.data.cpf,
-        response.data.telefone,
-        response.data.saldo
-      );
 
-      const jsonValue = JSON.stringify(response.data);
+    const erro = validate(
+      { senha, email },
+      {
+        senha: { length: { minimum: 6 } },
+        email: { email: true },
+      }
+    );
 
-      await AsyncStorage.setItem('@responsavel', jsonValue);
-      setLoading(false);
-      navigation.navigate('App');
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+    console.log(erro);
+    if (!erro) {
+      try {
+        let response = await api.post('/responsavel/logar', {
+          email,
+          senha,
+          tipo: 'R',
+        });
+        login(
+          response.data.id,
+          response.data.nome,
+          response.data.email,
+          response.data.senha,
+          response.data.cpf,
+          response.data.telefone,
+          response.data.saldo
+        );
+
+        const jsonValue = JSON.stringify(response.data);
+
+        await AsyncStorage.setItem('@responsavel', jsonValue);
+        setLoading(false);
+        navigation.navigate('App');
+      } catch (error) {
+        console.log(error);
+        Toast.show('Falha ao acessar!');
+      }
+    } else {
       Toast.show('Falha ao acessar!');
     }
+    setLoading(false);
   }
 
   return (

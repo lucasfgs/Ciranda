@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { Block, Checkbox, Text, Button as GaButton, theme, Input } from 'galio-framework';
 import Toast from 'react-native-simple-toast';
+import { validate } from 'validate.js';
+import { cpf as cpfLib } from 'cpf-cnpj-validator';
 
 import { Button, Icon } from '../components';
 import { Images, nowTheme } from '../constants';
@@ -23,11 +25,11 @@ const DismissKeyboard = ({ children }) => (
 );
 
 const INITAL_STATE = {
-  nome: '',
-  cpf: '',
-  telefone: '',
-  email: '',
-  senha: '',
+  nome: 'Lucas',
+  cpf: '62922039056',
+  telefone: '992261811',
+  email: 'test123a@gmail.com',
+  senha: '123456',
 };
 
 function Register({ navigation }) {
@@ -37,21 +39,41 @@ function Register({ navigation }) {
   async function criarConta() {
     setLoading(true);
     const { nome, cpf, telefone, senha, email } = responsavel;
-    try {
-      let response = await api.post('/responsaveis/criar', {
-        nome,
-        cpf,
-        telefone,
-        senha,
-        email,
-      });
-      setLoading(false);
-      navigation.navigate('Login');
-    } catch (error) {
-      setLoading(false);
 
-      Toast.show('Falha ao realizar cadastro!');
+    const cpfValido = cpfLib.isValid(cpf);
+
+    const erro = validate(
+      { senha, email, nome, telefone },
+      {
+        nome: { length: { minimum: 3 } },
+        telefone: {
+          length: { is: 9 },
+        },
+        senha: { length: { minimum: 6 } },
+        email: { email: true },
+      }
+    );
+
+    if (cpfValido && !erro) {
+      try {
+        let response = await api.post('/responsaveis/criar', {
+          nome,
+          cpf,
+          telefone,
+          senha,
+          email,
+        });
+        setLoading(false);
+        Toast.show('Cadastro realizado com sucesso!');
+        navigation.navigate('Login');
+      } catch (error) {
+        Toast.show('Falha ao realizar cadastro!');
+      }
+    } else {
+      Toast.show('Informe dados validos!');
     }
+    setLoading(false);
+
     setResponsavel(INITAL_STATE);
   }
 
@@ -73,6 +95,7 @@ function Register({ navigation }) {
                           <Input
                             placeholder="Nome"
                             style={styles.inputs}
+                            value={responsavel.nome}
                             onChangeText={(text) => setResponsavel({ ...responsavel, nome: text })}
                             iconContent={
                               <Icon
@@ -90,6 +113,7 @@ function Register({ navigation }) {
                             placeholder="CPF"
                             keyboardType={'numeric'}
                             style={styles.inputs}
+                            value={responsavel.cpf}
                             onChangeText={(text) => setResponsavel({ ...responsavel, cpf: text })}
                             iconContent={
                               <Icon
@@ -107,6 +131,7 @@ function Register({ navigation }) {
                             placeholder="Telefone"
                             keyboardType={'numeric'}
                             style={styles.inputs}
+                            value={responsavel.telefone}
                             onChangeText={(text) =>
                               setResponsavel({ ...responsavel, telefone: text })
                             }
@@ -127,6 +152,7 @@ function Register({ navigation }) {
                             style={styles.inputs}
                             keyboardType={'email-address'}
                             autoCapitalize="none"
+                            value={responsavel.email}
                             onChangeText={(text) => setResponsavel({ ...responsavel, email: text })}
                             iconContent={
                               <Icon
@@ -145,6 +171,7 @@ function Register({ navigation }) {
                             style={styles.inputs}
                             password={true}
                             autoCapitalize="none"
+                            value={responsavel.senha}
                             onChangeText={(text) => setResponsavel({ ...responsavel, senha: text })}
                             iconContent={
                               <Icon
