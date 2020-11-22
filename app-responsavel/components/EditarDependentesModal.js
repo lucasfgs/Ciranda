@@ -73,6 +73,7 @@ const EditarDependentesModal = ({ visible, onChange, id }) => {
       Toast.show('Alterado com sucesso!');
       onChange(false);
     } catch (error) {
+      console.log(error);
       setLoading(false);
       Toast.show('Falha ao alterar!');
     }

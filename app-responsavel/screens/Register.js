@@ -25,11 +25,11 @@ const DismissKeyboard = ({ children }) => (
 );
 
 const INITAL_STATE = {
-  nome: 'Lucas',
-  cpf: '62922039056',
-  telefone: '992261811',
-  email: 'test123a@gmail.com',
-  senha: '123456',
+  nome: '',
+  cpf: '',
+  telefone: '',
+  email: '',
+  senha: '',
 };
 
 function Register({ navigation }) {
