@@ -43,17 +43,21 @@ function Comprar({ carregarProdutos, resetar, carrinho }) {
     setScanned(true);
     setQrCodeModal(false);
     let response = await api.get(`/alunos/${data}/responsaveis/listar`);
-    setAluno(response.data);
+    if (response.data.length > 0) {
+      setAluno(response.data);
 
-    response = await api.get(`/alunos/${data}/cantinas/produtos/listar/`);
-    setProdutosResponse(response.data);
+      response = await api.get(`/alunos/${data}/cantinas/produtos/listar/`);
+      setProdutosResponse(response.data);
 
-    let produtos = response.data.map((produto) => {
-      return { ...produto, quantidade: 0 };
-    });
+      let produtos = response.data.map((produto) => {
+        return { ...produto, quantidade: 0 };
+      });
 
-    carregarProdutos(produtos);
-    Toast.show('QRCode lido com sucesso!');
+      carregarProdutos(produtos);
+      Toast.show('QRCode lido com sucesso!');
+    } else {
+      Toast.show('Erro ao buscar o aluno!');
+    }
   };
 
   if (hasPermission === null) {
@@ -71,14 +75,24 @@ function Comprar({ carregarProdutos, resetar, carrinho }) {
     try {
       setLoading(true);
 
-      await api.post('/alunos/compras/criar', {
-        id_aluno: aluno[0].id,
-        valor_total: carrinho.valorTotal,
-      });
-      Toast.show('Venda realizada com sucesso!');
+      if (carrinho.valorTotal > 0) {
+        await api.post('/alunos/compras/criar', {
+          id_aluno: aluno[0].id,
+          valor_total: carrinho.valorTotal,
+        });
+        Toast.show('Venda realizada com sucesso!');
+        removerAluno();
+      } else {
+        Toast.show('Erro ao realizar venda!');
+      }
     } catch (error) {
       Toast.show('Erro ao realizar venda!');
+    } finally {
+      setLoading(false);
     }
+  }
+
+  function removerAluno() {
     setLoading(false);
     setAluno(INITIAL_STATE);
     resetar();

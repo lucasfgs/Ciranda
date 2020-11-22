@@ -16,32 +16,6 @@ const DismissKeyboard = ({ children }) => (
 const QRCodeDependentesModal = ({ visible, onChange, id }) => {
   const [loading, setLoading] = useState(false);
 
-  //   async function salvarAluno() {
-  //     const jsonValue = await AsyncStorage.getItem('@responsavel');
-  //     let responsavel = JSON.parse(jsonValue);
-
-  //     // try {
-  //     //   //   setLoading(true);
-  //     //   //   let response = await api.post('/alunos/criar', {
-  //     //   //     nome,
-  //     //   //     id_responsavel: responsavel.id,
-  //     //   //   });
-  //     //   //   const { id: id_aluno } = response.data;
-  //     //   //   let obj = {};
-  //     //   //   obj.data = restricoes.map((restricao) => {
-  //     //   //     return { id_aluno, id_produto: restricao };
-  //     //   //   });
-  //     //   //   response = await api.post('/alunos/retricoes/criar', obj);
-  //     //   //   setLoading(false);
-  //     //   //   Toast.show('Cadastrado com sucesso!');
-  //     //   //   onChange(false);
-  //     //   // } catch (error) {
-  //     //   //   console.log(error);
-  //     //   //   setLoading(false);
-  //     //   //   Toast.show('Falha ao cadastrar!');
-  //     // }
-  //   }
-
   return (
     <DismissKeyboard>
       <Modal isVisible={visible}>
@@ -51,14 +25,7 @@ const QRCodeDependentesModal = ({ visible, onChange, id }) => {
           </View>
 
           <View style={styles.content}>
-            <QRCode
-              value={`${id}`}
-              size={250}
-              style={{ marginTop: 20 }}
-              //   logo={Images.Logo}
-              //   logoSize={75}
-              //   logoBackgroundColor="orange"
-            />
+            <QRCode value={`${id}`} size={250} style={{ marginTop: 20 }} />
           </View>
 
           <View style={styles.footer}>

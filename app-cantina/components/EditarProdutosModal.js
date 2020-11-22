@@ -75,7 +75,7 @@ const EditarProdutosModal = ({ visible, onChange, id }) => {
             overlayColor="rgba(0, 0, 0, 0.6)"
           />
           <View style={styles.header}>
-            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: 20 }}>Editar aluno</Text>
+            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: 20 }}>Editar produto</Text>
           </View>
 
           <Block style={{ width: '90%', marginTop: 20 }}>

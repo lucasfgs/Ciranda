@@ -14,15 +14,17 @@ import Input from './Input';
 
 import api from '../services/api';
 
+const INITIAL_STATE = '';
+
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
-const CadastrarDependentesModal = ({ visible, onChange }) => {
-  const [nome, setNome] = useState('');
-  const [valor, setValor] = useState('');
+const CadastrarProdutoModal = ({ visible, onChange }) => {
+  const [nome, setNome] = useState(INITIAL_STATE);
+  const [valor, setValor] = useState(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
 
-  async function salvarAluno() {
+  async function salvarProduto() {
     try {
       setLoading(true);
       await api.post('/cantinas/produtos/criar', {
@@ -38,6 +40,9 @@ const CadastrarDependentesModal = ({ visible, onChange }) => {
       setLoading(false);
       Toast.show('Falha ao cadastrar!');
     }
+
+    setNome(INITIAL_STATE);
+    setValor(INITIAL_STATE);
   }
 
   return (
@@ -106,7 +111,7 @@ const CadastrarDependentesModal = ({ visible, onChange }) => {
                 borderRadius: 0,
                 height: 40,
               }}
-              onPress={salvarAluno}
+              onPress={salvarProduto}
               loading={loading}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -142,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CadastrarDependentesModal;
+export default CadastrarProdutoModal;

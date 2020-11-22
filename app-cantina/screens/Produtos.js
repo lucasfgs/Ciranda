@@ -4,7 +4,7 @@ import { Icon, Input } from '../components';
 import { Button } from 'galio-framework';
 import { connect } from 'react-redux';
 
-import CadastrarDependentes from '../components/CadastrarProdutoModal';
+import CadastrarProdutos from '../components/CadastrarProdutoModal';
 import EditarProdutos from '../components/EditarProdutosModal';
 import ExcluirDependentes from '../components/ExcluirDependentesModal';
 
@@ -81,7 +81,7 @@ const Dependentes = ({ responsavel }) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <CadastrarDependentes visible={cadastrarModal} onChange={setCadastrarModal} />
+        <CadastrarProdutos visible={cadastrarModal} onChange={setCadastrarModal} />
         <EditarProdutos visible={editarModal} onChange={setEditarModal} id={produtoSelecionado} />
         <ExcluirDependentes
           visible={excluirModal}
