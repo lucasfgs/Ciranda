@@ -83,13 +83,11 @@ function ProfileStack(props) {
         name="Meu cadastro"
         component={MeuCadastro}
         options={{
-          // header: ({ navigation, scene }) => (
-          //   <Header transparent white title="Profile" navigation={navigation} scene={scene} />
-          // ),
-          cardStyle: { backgroundColor: '#FFFFFF', color: '#fff' },
-          title: false,
-          headerTransparent: true,
-          // header: false,
+          header: ({ navigation, scene }) => (
+            <Header black title="Meu cadastro" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF', color: '#000' },
+          title: true,
         }}
       />
     </Stack.Navigator>
